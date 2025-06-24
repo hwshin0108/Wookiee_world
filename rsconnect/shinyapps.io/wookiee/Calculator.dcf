@@ -1,0 +1,13 @@
+name: Calculator
+title: Calculator
+username: wookiee
+account: wookiee
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 14966087
+bundleId: 10508916
+url: https://wookiee.shinyapps.io/Calculator/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: 1. Cell_number_Calculator_app.R|2. Dilutioin.R|2. Mass_edit.R|2. Mass.R|2. Morlarity.R|2. Volume.R
