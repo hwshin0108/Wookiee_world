@@ -5,3 +5,6 @@
 wookiee.Rproj
 .git
 .DS_Store
+Data_csv/
+Data_rds/
+Data_rnk/

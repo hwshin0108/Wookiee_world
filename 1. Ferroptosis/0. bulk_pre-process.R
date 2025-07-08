@@ -1,15 +1,15 @@
 ##### 
 #@ install pakage
-lapply(c("DESeq2", "AnnotationDbi", "org.Hs.eg.db"), BiocManager::install, character.only = T)
+lapply(c("DESeq2", "AnnotationDbi", "org.Hs.eg.db", "edgeR"), BiocManager::install, character.only = T)
 lapply(c("data.table"), install.packages, character.only = T)
 
 #@ load packages
-lapply(c("DESeq2", "tidyverse", "data.table", "AnnotationDbi", "org.Hs.eg.db"), library, character.only = T)
+lapply(c("DESeq2", "tidyverse", "data.table", "AnnotationDbi", "org.Hs.eg.db", "edgeR"), library, character.only = T)
 
 #####
 #@ Data loading, pre-processing
 
-data <- fread("/Users/wookiee/R_local repository/wookiee/1. Ferroptosis/Counts_from_fasta_2024-11-17 (raw data).csv")
+data <- fread('/Users/wookiee/R_local repository/wookiee/1. Ferroptosis/Data_csv/0. Counts_from_fasta_2024-11-17 (raw data).csv')
 
 group_name <- c("CON", "Era", "OA", "RSL")
 group_num <- c(4, 4, 4, 4)
@@ -27,36 +27,11 @@ colnames(data)[2:ncol(data)] <- group_colname
 colnames(data)[ncol(data)] <- "RSL_4"
 condition <- condition[-length(condition)]
 
-data$gene <- as.character(mapIds(org.Hs.eg.db, rownames(data), keytype = "ENTREZID", "SYMBOL")) 
-data <- na.omit(data)
-data$gene <- make.unique(data$gene)
-temp <- data$gene
-data <- data[,-c(1, 17)]
-rownames(data) <- temp
-rm(temp)
-condition <- factor(condition)
-data_mat <- as.matrix(data)
+temp <- rowSums(data[,-1])        # In Count number typ data: remove all row value = 0
+data_ft <- data[temp != 0,]
+temp_ft <- data_ft[,-1]
+rownames(temp_ft) <- as.character(unlist(data_ft[,1]))
 
-dds <- DESeqDataSetFromMatrix(countData = round(data_mat), colData = DataFrame(condition), design = ~0 + condition)
-dds <- DESeq(dds)
-resultsNames(dds)
-
-#####
-#@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#### preparing count data
+write.csv(temp_ft, file = "/Users/wookiee/R_local repository/wookiee/1. Ferroptosis/Data_csv/1. filtered_data.csv", row.names = T) 
+## using upper csv file, preparing metadata in excel (Sample Name, condition need)
